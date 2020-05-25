@@ -88,7 +88,7 @@ class CBHG:
             return tf.concat(outputs, axis=2)  # Concat forward and backward outputs
 
 
-class ZoneoutLSTMCell(tf.nn.rnn_cell.RNNCell):
+class ZoneoutLSTMCell(tf.compat.v1.nn.rnn_cell.RNNCell):
     """Wrapper for tf LSTM to create Zoneout LSTM Cell
 
     inspired by:
