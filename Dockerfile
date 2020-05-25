@@ -21,5 +21,9 @@ RUN patch -i p.patch \
 
 RUN pip install google-colab
 
+RUN apt-get install -y ffmpeg
+
+RUN apt-get install -y libxkbcommon-x11-0
+
 RUN rm -f /workspace/requirements.txt /workspace/p.patch
 WORKDIR /workspace/rtvc
