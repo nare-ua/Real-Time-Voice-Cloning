@@ -1,0 +1,1 @@
+docker run --gpus 1 --shm-size=1g --ulimit memlock=-1 --ulimit stack=67108864 --rm -p 10088:8888 --ipc=host -d -v $PWD:/workspace/rtvc/ -v /mnt/data:/workspace/data/ rtvc sh /workspace/rtvc/run_colab.sh
