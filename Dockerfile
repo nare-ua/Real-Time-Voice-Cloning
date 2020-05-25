@@ -20,3 +20,6 @@ RUN patch -i p.patch \
   /opt/conda/lib/python3.6/site-packages/numba/typeconv/castgraph.py
 
 RUN pip install google-colab
+
+RUN rm -f /workspace/requirements.txt /workspace/p.patch
+WORKDIR /workspace/rtvc
