@@ -1,0 +1,12 @@
+*** /opt/conda/lib/python3.6/site-packages/numba/typeconv/castgraph.py	2019-03-27 07:05:37.000000000 +0000
+--- a.py	2020-05-21 14:24:14.109916899 +0000
+***************
+*** 3,9 ****
+  from collections import defaultdict
+  import enum
+  
+- from numba.utils import total_ordering
+  
+  
+  class Conversion(enum.IntEnum):
+--- 3,8 ----

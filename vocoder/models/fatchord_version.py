@@ -157,6 +157,8 @@ class WaveRNN(nn.Module):
         rnn2 = self.get_gru_cell(self.rnn2)
 
         with torch.no_grad():
+            __stride = [1] + list(mels.stride())[1:]
+            mels = torch.as_strided(mels, mels.size(), __stride)
             mels = mels.cuda()
             wave_len = (mels.size(-1) - 1) * self.hop_length
             mels = self.pad_tensor(mels.transpose(1, 2), pad=self.pad, side='both')
