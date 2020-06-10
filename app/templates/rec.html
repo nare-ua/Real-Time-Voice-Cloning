@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- Latest compiled and minified Bootstrap CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='styles/style.css') }}">
+  </head>
+  <body>
+    <h1>Real Time Voice Clonning Demo</h1>
+    <p>'Record' 버튼을 누르고 5초 정도 말씀해주세요</p>
+    <div id="controls">
+    	<button id="recordButton">Record</button>
+    	<button id="pauseButton" disabled style="visibility:hidden">Pause</button>
+    	<button id="stopButton" disabled>Stop</button>
+    </div>
+    <div id="formats">Format: start recording to see sample rate</div>
+	<p><strong>Recordings:</strong></p>
+  	<ol id="recordingsList"></ol>
+    <!-- inserting these scripts at the end to be able to use all the elements in the DOM -->
+    <form id="input_form" name="input_form" method="POST" action="/tts">
+	<div class="form-group">
+	    <label for="select">언어 (language) </label>
+	    <select name="input_language" class="form-control">
+		    <!-- <option value="kr" {{ 'selected' if opt_lang == 'kr'else '' }}>한글</option> -->
+		<option value="en" {{ 'selected' if opt_lang == 'en'else '' }}>English</option>
+	    </select></div>
+	<div class="form-group">
+	    <textarea class="form-control" id="text_area" name="input_text" placeholder="{{sample_text}}"
+		cols="40" rows="8"></textarea></div>
+	<div id="btns" class="form-group">
+	    <input id="btn" type="submit" class="btn btn-primary mb-2" value="음성합성(TTS)" />
+	</div>
+    </form>
+
+    <div id="warning" class="alert alert-warning" role="alert" style="display: none">
+	텍스트를 입력하세요. (Input the texts)
+    </div>
+    <div id="warning2" class="alert alert-warning" role="alert" style="display: none">
+	목소리를 녹음하세요. (Record the audio)
+    </div>
+
+            <hr class="my-4">
+            <div class="media">
+                <div class="media-body pull-right">
+                    <p class="lead"> 합성된 음성 (Result) </p>
+
+                    <audio controls preload="auto" autoplay>
+                        <source src="http://localhost:5000/{{voice}}" type="audio/mp3">
+                    </audio>
+                </div>
+            </div>
+
+    <script src="https://webrtc.github.io/adapter/adapter-latest.js"></script>
+    <script src="https://cdn.rawgit.com/mattdiamond/Recorderjs/08e7abd9/dist/recorder.js"></script>
+        <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
+            integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
+            crossorigin="anonymous"></script>
+
+        <script type="text/javascript">
+            $(document).ready(() => {
+                $("#btns").prepend('<div id="loading" style="display : none;" ><button class="btn btn-primary" type="button" disabled><span class="spinner-grow spinner-grow-sm" role="status" aria-hidden="true"></span>Loading...</button></div>')
+            });
+
+            $("#input_form").submit(() => {
+                var pass = true;
+                if (pass == false) {
+                    return true
+                }
+
+                if(recordingsList.children.length < 1) {
+                    $('#warning2').show();
+                    return false;
+                }
+                
+                if (!$("#text_area").val()) {
+                    $('#warning').show();
+                    return false;
+                } else {
+                    $("#loading").show();
+                    $("#btn").hide()
+                    $('#warning').hide();
+                    $('#warning2').hide();
+                    return true;
+                }
+
+            });
+
+
+        </script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
+            integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
+            crossorigin="anonymous"></script>
+        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
+            integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
+            crossorigin="anonymous"></script>
+    <script src="{{ url_for('static', filename='js/app.js') }}"></script>
+  </body>
+</html>

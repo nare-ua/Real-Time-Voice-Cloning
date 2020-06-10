@@ -19,11 +19,14 @@ RUN apt update && apt install -y \
 RUN patch -i p.patch \
   /opt/conda/lib/python3.6/site-packages/numba/typeconv/castgraph.py
 
-RUN pip install google-colab
-
 RUN apt-get install -y ffmpeg
-
 RUN apt-get install -y libxkbcommon-x11-0
 
 RUN rm -f /workspace/requirements.txt /workspace/p.patch
 WORKDIR /workspace/rtvc
+
+RUN pip install flask
+RUN pip install google-colab
+
+EXPOSE 8888
+EXPOSE 10050
