@@ -6,13 +6,13 @@ from [here](https://github.com/CorentinJ/Real-Time-Voice-Cloning/wiki/Pretrained
 `unzip pretrained.zip`
 
 ## run docker interactively
-`sh docker_interactive.sh`
+`bash docker_interactive.sh`
 
 ## test (inside docker)
 `python demo_cli.py`
 
 ## Run with x-window (to run demo_toolbox.py)
-`sh docker_interactive_x.sh`
+`bash docker_interactive_x.sh`
 
 on the host machine
 
