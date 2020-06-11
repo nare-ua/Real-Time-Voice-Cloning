@@ -6,7 +6,8 @@ from flask import (
   request, 
   session,
   redirect,
-  url_for
+  url_for,
+  send_from_directory
 )
 
 import rtvc
@@ -66,16 +67,22 @@ def allowed_file(filename):
 @app.route('/')
 def show_entries():
   #return render_template('simple.html', sample_text=sample_text.get(t2s.language), voice=None, opt_lang=t2s.language)
-  return render_template('simple.html')
+  return render_template('rec.html')
 
 @app.route('/rec')
 def show_rec():
-  #return render_template('simple.html', sample_text=sample_text.get(t2s.language), voice=None, opt_lang=t2s.language)
   return render_template('rec.html')
+
+@app.route('/tss/<path:path>')
+def static_file(path):
+  print("static_file:",path)
+  return send_from_directory(app.config['UPLOAD_FOLDER'], path)
 
 @app.route('/upload', methods=['POST'])
 def upload_file():
   # check if the post request has the file part
+  input_text = request.form.get('text')
+  print("input_text=", input_text)
   print("request.files=", request.files)
   print("request.files.keys=", list(request.files.keys()))
 
@@ -96,11 +103,28 @@ def upload_file():
     return redirect(request.url)
 
   if _file and allowed_file(_file.filename):
-    print("saving file...")
     filename = secure_filename(_file.filename)
-    print("secure filename...", filename)
-    _file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
-    return redirect(url_for('uploaded_file', filename=filename))
+    b, ext = os.path.splitext(filename)
+    filename_dn = b + "_dn" + ext
+    filename_sr = b + "_sr" + ext
+    filename_tss = b + "_tss" + ext
+    
+    __filepath = os.path.join(app.config['UPLOAD_FOLDER'], filename)
+    __filepath_dn = os.path.join(app.config['UPLOAD_FOLDER'], filename_dn)
+    __filepath_sr = os.path.join(app.config['UPLOAD_FOLDER'], filename_sr)
+    __filepath_tss = os.path.join(app.config['UPLOAD_FOLDER'], filename_tss)
+    print("saveing to ...", __filepath)
+    _file.save(__filepath)
+    print("downsampling to ...", __filepath_dn)
+    rtvc.downsample(__filepath, __filepath_dn)
+    print("silence removal to ...", __filepath_sr)
+    rtvc.silence_removal(__filepath_dn, __filepath_sr)
+
+    if rtvc.convert(input_text, __filepath_sr, __filepath_tss):
+        return filename_tss
+    else:
+        return "FAIL"
+    #return redirect(url_for('uploaded_file', filename=filename))
 
 #Route to stream music
 #@app.route('/<voice>', methods=['GET'])

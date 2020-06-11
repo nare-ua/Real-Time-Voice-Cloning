@@ -72,6 +72,10 @@ function startRecording() {
   while (recordingsList.firstChild) {
     recordingsList.removeChild(recordingsList.firstChild);
   }
+  let ttsList = document.getElementById('ttsList');
+  while (ttsList.firstChild) {
+    ttsList.removeChild(ttsList.firstChild);
+  }
 
 		console.log("Recording started");
 
@@ -147,6 +151,7 @@ function createDownloadLink(blob) {
 	//li.appendChild(link);
 	
 	//upload link
+  /*
 	var upload = document.createElement('a');
 	upload.href="#";
 	upload.innerHTML = "Upload";
@@ -164,9 +169,11 @@ function createDownloadLink(blob) {
 	})
 	li.appendChild(document.createTextNode (" "))//add a space in between
 	li.appendChild(upload)//add the upload link to li
+  */
 
   $('#warning2').hide();
 
+  	li.blob = blob;
 	//add the li element to the ol
 	recordingsList.appendChild(li);
 }
