@@ -1,5 +1,5 @@
 ## build docker
-`sh docker_build.sh`
+`bash docker_build.sh`
 
 ## get pretrained model
 from [here](https://github.com/CorentinJ/Real-Time-Voice-Cloning/wiki/Pretrained-models)
@@ -23,8 +23,17 @@ after getting `containerId` from `docker ps`
 
 ## demo app
 
-#### For samples related audio input
+
+### How to run
+
+0. `git clone git@github.com:nare-ua/Real-Time-Voice-Cloning.git`
+1. run `bash scripts/docker/run_demo.sh`
+2. the app should be avialable at port 32774
+3. Follow `security walkaround` seciton in the below 
+
+#### samples related audio input 
 https://webrtc.github.io/samples/src/content/devices/input-output/
+
 
 #### chrome security walkaround
 [Enabling the Microphone/Camera in Chrome for (Local) Unsecure Origins](https://medium.com/@Carmichaelize/enabling-the-microphone-camera-in-chrome-for-local-unsecure-origins-9c90c3149339)
