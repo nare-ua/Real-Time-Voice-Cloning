@@ -1,5 +1,5 @@
 import sys
-sys.path.insert(0, '../')
+sys.path.insert(0, '/workspace/rtvc')
 from encoder.params_model import model_embedding_size as speaker_embedding_size
 from synthesizer.inference import Synthesizer
 from encoder import inference as encoder
@@ -16,11 +16,13 @@ def downsample(infn, outfn):
   cmd = f'sox {infn} -b16 -c1 -r22050 {outfn}'
   ret = os.system(cmd)
   print("ret=", ret)
+  return ret == 0
 
 def silence_removal(infn, outfn):
   cmd = f'sox {infn} {outfn} silence 1 0.05 0.1% reverse silence 1 0.05 0.1% reverse'
   ret = os.system(cmd)
   print("ret=", ret)
+  return ret == 0
 
 def init():
     if RtvcBackend.singleton is None:
@@ -36,15 +38,17 @@ class RtvcBackend:
 
   singleton = None
   def init(self):
-    enc_model_fpath=Path('../encoder/saved_models/pretrained.pt')
-    voc_model_fpath=Path('../vocoder/saved_models/pretrained/pretrained.pt')
-    syn_model_dir=Path('../synthesizer/saved_models/logs-pretrained')
+    reporoot = Path('/workspace/rtvc')
+    enc_model_fpath = reporoot.joinpath('encoder/saved_models/pretrained.pt')
+    voc_model_fpath = reporoot.joinpath('vocoder/saved_models/pretrained/pretrained.pt')
+    syn_model_dir = reporoot.joinpath('synthesizer/saved_models/logs-pretrained')
+
     if not torch.cuda.is_available():
         print("Your PyTorch installation is not configured to use CUDA. If you have a GPU ready "
               "for deep learning, ensure that the drivers are properly installed, and that your "
               "CUDA version matches your PyTorch installation. CPU-only inference is currently "
               "not supported.", file=sys.stderr)
-        #quit(-1)
+        return False
     device_id = torch.cuda.current_device()
     gpu_properties = torch.cuda.get_device_properties(device_id)
     print("Found %d GPUs available. Using GPU %d (%s) of compute capability %d.%d with "
@@ -105,6 +109,8 @@ class RtvcBackend:
     vocoder.infer_waveform(mel, target=200, overlap=50, progress_callback=no_action)
     
     print("All test passed! You can now synthesize speech.\n\n")
+
+    return True
 
 
   #TODO: use sox python lib?
